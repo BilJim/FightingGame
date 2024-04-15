@@ -1,6 +1,4 @@
-using System;
 using GameFramework.Event;
-using UnityGameFramework.Runtime;
 
 /// <summary>
 /// 玩家逻辑实体
@@ -33,11 +31,9 @@ public class PlayerEntity : RoleEntity
         {
             case InputControlType.Horizontal:
                 moveDir.x = eventArgs.keyValue;
-                Log.Debug($"moveDir.x: {eventArgs.keyValue}");
                 break;
             case InputControlType.Vertical:
                 moveDir.y = eventArgs.keyValue;
-                Log.Debug($"moveDir.y: {eventArgs.keyValue}");
                 break;
             case InputControlType.Atk1:
                 break;
@@ -46,9 +42,9 @@ public class PlayerEntity : RoleEntity
             case InputControlType.Defend:
                 break;
             case InputControlType.Jump:
+                RoleBaseState currentState = roleFsm.m_Fsm.CurrentState as RoleBaseState;
+                currentState.Jump(roleFsm.m_Fsm);
                 break;
-            default:
-                throw new ArgumentOutOfRangeException();
         }
     }
 }

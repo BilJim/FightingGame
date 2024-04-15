@@ -30,6 +30,8 @@ public abstract class RoleEntity : TargetableObject
         roleFsm = new RoleFsm();
         roleFsm.m_Fsm.SetData<VarUnityObject>("roleSprite", roleSprite);
         roleFsm.m_Fsm.SetData<VarUnityObject>("player", transform);
+        //身体对象，用于 y轴 模拟跳跃
+        roleFsm.m_Fsm.SetData<VarUnityObject>("body", transform.Find("Role"));
         roleFsm.m_Fsm.SetData<VarUnityObject>("animator", Animator);
         roleFsm.m_Fsm.SetData<VarSingle>("moveSpeed", moveSpeed);
         roleFsm.m_Fsm.SetData<VarVector2>("moveDir", moveDir);
