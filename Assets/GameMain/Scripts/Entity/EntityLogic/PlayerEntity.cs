@@ -5,7 +5,7 @@ using UnityGameFramework.Runtime;
 /// <summary>
 /// 玩家逻辑实体
 /// </summary>
-public class PlayerEntity : TargetableObject
+public class PlayerEntity : RoleEntity
 {
     protected override void OnShow(object userData)
     {
@@ -18,6 +18,7 @@ public class PlayerEntity : TargetableObject
     {
         base.OnDead(attacker);
         GameEntry.Event.Unsubscribe(InputControlEventArgs.EventId, OnNotice);
+        roleFsm.DestroyFsm();
     }
 
     /// <summary>
@@ -28,12 +29,15 @@ public class PlayerEntity : TargetableObject
     public void OnNotice(object sender, GameEventArgs args)
     {
         InputControlEventArgs eventArgs = args as InputControlEventArgs;
-        Log.Debug($"current InputControlType: {eventArgs.inputType}");
         switch (eventArgs.inputType)
         {
             case InputControlType.Horizontal:
+                moveDir.x = eventArgs.keyValue;
+                Log.Debug($"moveDir.x: {eventArgs.keyValue}");
                 break;
             case InputControlType.Vertical:
+                moveDir.y = eventArgs.keyValue;
+                Log.Debug($"moveDir.y: {eventArgs.keyValue}");
                 break;
             case InputControlType.Atk1:
                 break;

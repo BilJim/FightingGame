@@ -1,5 +1,6 @@
 using GameFramework;
 using GameFramework.Event;
+using UnityGameFramework.Runtime;
 
 /// <summary>
 /// InputControl 事件参数

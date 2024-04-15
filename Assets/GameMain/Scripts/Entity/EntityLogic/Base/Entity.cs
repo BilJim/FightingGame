@@ -13,7 +13,7 @@ public abstract class Entity : EntityLogic
     public Animator Animator
     {
         get;
-        private set;
+        protected set;
     }
 
     protected override void OnInit(object userData)
