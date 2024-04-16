@@ -21,6 +21,8 @@ public class InputControlComponent : GameFrameworkComponent
         //格挡
         if (Input.GetKeyDown(KeyCode.L))
             GameEntry.Event.FireNow(this, InputControlEventArgs.TriggerEvent(InputControlType.Defend));
+        if (Input.GetKeyUp(KeyCode.L))
+            GameEntry.Event.FireNow(this, InputControlEventArgs.TriggerEvent(InputControlType.UnDefend));
         //跳跃
         if (Input.GetKeyDown(KeyCode.Space))
             GameEntry.Event.FireNow(this, InputControlEventArgs.TriggerEvent(InputControlType.Jump));

@@ -13,6 +13,8 @@ public enum InputControlType
     Atk2,
     //防御
     Defend,
+    //取消防御
+    UnDefend,
     //跳跃
     Jump
 }

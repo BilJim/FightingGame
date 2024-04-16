@@ -35,16 +35,6 @@ public class PlayerEntity : RoleEntity
             case InputControlType.Vertical:
                 moveDir.y = eventArgs.keyValue;
                 break;
-            case InputControlType.Atk1:
-                break;
-            case InputControlType.Atk2:
-                break;
-            case InputControlType.Defend:
-                break;
-            case InputControlType.Jump:
-                RoleBaseState currentState = roleFsm.m_Fsm.CurrentState as RoleBaseState;
-                currentState.Jump(roleFsm.m_Fsm);
-                break;
         }
     }
 }
