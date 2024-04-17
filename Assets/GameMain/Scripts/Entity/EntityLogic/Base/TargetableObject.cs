@@ -4,13 +4,18 @@ using UnityGameFramework.Runtime;
 /// <summary>
 /// 可作为目标的实体类
 /// </summary>
-public class TargetableObject : Entity
+public abstract class TargetableObject : Entity
 {
     [SerializeField]
     private TargetableObjectData m_TargetableObjectData = null;
     
     //死亡判断
     public bool IsDead => m_TargetableObjectData.HP <= 0;
+
+    public T GetData<T>() where T : TargetableObjectData
+    {
+        return m_TargetableObjectData as T;
+    }
     
     //受到伤害
     public void ApplyDamage(Entity attacker, int damageHP)

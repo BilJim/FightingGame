@@ -1,6 +1,5 @@
 using GameFramework.Fsm;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 
 /// <summary>
 /// Idle 状态
@@ -19,7 +18,7 @@ public class IdleState : RoleBaseState
     protected override void OnUpdate(IFsm<RoleFsm> fsm, float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(fsm, elapseSeconds, realElapseSeconds);
-        if (moveDir != Vector2.zero)
+        if (playerData.moveDir != Vector2.zero)
             ChangeState<MoveState>(fsm);
     }
 

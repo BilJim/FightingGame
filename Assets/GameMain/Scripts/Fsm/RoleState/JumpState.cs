@@ -9,11 +9,7 @@ using UnityGameFramework.Runtime;
 public class JumpState : RoleBaseState
 {
 
-    //跳跃速度
-    private float jumpSpeed = 10;
     protected float nowJumpSpeed;
-    //重力加速度
-    private float gSpeed = 50f;
     //身体对象，用于 y轴 模拟跳跃
     private Transform bodyTransform;
 
@@ -21,12 +17,12 @@ public class JumpState : RoleBaseState
     protected override void OnEnter(IFsm<RoleFsm> fsm)
     {
         base.OnEnter(fsm);
-        bodyTransform = (Transform)fsm.GetData<VarUnityObject>("body");
+        bodyTransform = player.Find("Role");
         if (fsm.CurrentState.GetType() == typeof(JumpAtkState))
             return;
         animator.SetBool("isGround", false);
         animator.SetTrigger("jumpTrigger");
-        nowJumpSpeed = jumpSpeed;
+        nowJumpSpeed = playerData.jumpSpeed;
         //订阅监听事件
         GameEntry.Event.Subscribe(InputControlEventArgs.EventId, OnNotice);
     }
@@ -36,8 +32,8 @@ public class JumpState : RoleBaseState
     {
         base.OnUpdate(fsm, elapseSeconds, realElapseSeconds);
         //重力影响 v = v - gt;
-        if (bodyTransform.localPosition.y != 0)
-            nowJumpSpeed -= gSpeed * elapseSeconds;
+        if (!animator.GetBool("isGround"))
+            nowJumpSpeed -= playerData.gSpeed * elapseSeconds;
         if (nowJumpSpeed <= 0 && bodyTransform.localPosition.y <= 0)
         {
             animator.SetBool("isGround", true);

@@ -14,11 +14,10 @@ public abstract class RoleBaseState : FsmState<RoleFsm>
     protected Animator animator;
     //用于调整人物方向
     private SpriteRenderer roleSprite;
-    protected float moveSpeed;
-    protected Vector2 moveDir;
     protected IFsm<RoleFsm> roleFsm;
     //攻击次数
     protected int atkCount;
+    protected PlayerData playerData;
     
     //创建有限状态机时调用
     protected override void OnInit(IFsm<RoleFsm> fsm)
@@ -34,7 +33,7 @@ public abstract class RoleBaseState : FsmState<RoleFsm>
         player = (Transform)fsm.GetData<VarUnityObject>("player").Value;
         animator = (Animator)fsm.GetData<VarUnityObject>("animator").Value;
         roleSprite = (SpriteRenderer)fsm.GetData<VarUnityObject>("roleSprite").Value;
-        moveSpeed = fsm.GetData<VarSingle>("moveSpeed").Value;
+        playerData = fsm.GetData<VarEntityData>("playerData").Value as PlayerData;
         if (fsm.GetData<VarInt32>("atkCount") == null)
             atkCount = 0;
         else
@@ -45,7 +44,6 @@ public abstract class RoleBaseState : FsmState<RoleFsm>
     protected override void OnUpdate(IFsm<RoleFsm> fsm, float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(fsm, elapseSeconds, realElapseSeconds);
-        moveDir = fsm.GetData<VarVector2>("moveDir").Value;
     }
 
     //离开有限状态机时调用
@@ -71,19 +69,19 @@ public abstract class RoleBaseState : FsmState<RoleFsm>
         switch (eventArgs.inputType)
         {
             case InputControlType.Jump:
-                Jump(roleFsm);
+                Jump();
                 break;
             case InputControlType.Atk1:
-                Attack(roleFsm);
+                Attack();
                 break;
             case InputControlType.Atk2:
-                FootAttack(roleFsm);
+                FootAttack();
                 break;
             case InputControlType.Defend:
-                Defend(roleFsm);
+                Defend();
                 break;
             case InputControlType.UnDefend:
-                Defend(roleFsm, false);
+                Defend(false);
                 break;
         }
     }
@@ -91,87 +89,97 @@ public abstract class RoleBaseState : FsmState<RoleFsm>
     protected void Move(float elapseSeconds)
     {
         //移动
-        player.Translate(moveDir.normalized * moveSpeed * elapseSeconds);
+        player.Translate(playerData.moveDir.normalized * playerData.moveSpeed * elapseSeconds);
         //转向
-        if (moveDir.x > 0)
+        if (playerData.moveDir.x > 0)
             roleSprite.flipX = false;
-        else if (moveDir.x < 0)
+        else if (playerData.moveDir.x < 0)
             roleSprite.flipX = true;
     }
     
     /// <summary>
     /// 跳跃
     /// </summary>
-    public void Jump(IFsm<RoleFsm> fsm)
+    public void Jump()
     {
         //切换动作
         if (animator.GetBool("isGround"))
-            ChangeState<JumpState>(fsm);
+            ChangeState<JumpState>(roleFsm);
     }
 
     /// <summary>
     /// 手部攻击
     /// </summary>
-    /// <param name="fsm"></param>
-    public void Attack(IFsm<RoleFsm> fsm)
+    public void Attack()
     {
         //切换动作
         if (!animator.GetBool("isGround"))
             return;
-        FsmState<RoleFsm> currentState = fsm.CurrentState;
+        FsmState<RoleFsm> currentState = roleFsm.CurrentState;
         atkCount ++;
         if (currentState.GetType() == typeof(AtkOneState))
         {
-            fsm.SetData<VarInt32>("atkCount", atkCount);
-            ChangeState<AtkTwoState>(fsm);
+            roleFsm.SetData<VarInt32>("atkCount", atkCount);
+            ChangeState<AtkTwoState>(roleFsm);
         }
         else if (currentState.GetType() == typeof(AtkTwoState))
         {
-            fsm.SetData<VarInt32>("atkCount", atkCount);
-            ChangeState<AtkThreeState>(fsm);
+            roleFsm.SetData<VarInt32>("atkCount", atkCount);
+            ChangeState<AtkThreeState>(roleFsm);
         }
         else
         {
-            fsm.SetData<VarInt32>("atkCount", atkCount);
-            ChangeState<AtkOneState>(fsm);
+            roleFsm.SetData<VarInt32>("atkCount", atkCount);
+            ChangeState<AtkOneState>(roleFsm);
         }
     }
     
     /// <summary>
     /// 脚部攻击
     /// </summary>
-    /// <param name="fsm"></param>
-    public void FootAttack(IFsm<RoleFsm> fsm)
+    public void FootAttack()
     {
         //切换动作
         if (!animator.GetBool("isGround"))
             return;
-        FsmState<RoleFsm> currentState = fsm.CurrentState;
+        FsmState<RoleFsm> currentState = roleFsm.CurrentState;
         atkCount ++;
         if (currentState.GetType() == typeof(FootAtkOneState))
         {
-            fsm.SetData<VarInt32>("atkCount", atkCount);
-            ChangeState<FootAtkTwoState>(fsm);
+            roleFsm.SetData<VarInt32>("atkCount", atkCount);
+            ChangeState<FootAtkTwoState>(roleFsm);
         }
         else
         {
-            fsm.SetData<VarInt32>("atkCount", atkCount);
-            ChangeState<FootAtkOneState>(fsm);
+            roleFsm.SetData<VarInt32>("atkCount", atkCount);
+            ChangeState<FootAtkOneState>(roleFsm);
         }
     }
 
     /// <summary>
     /// 格挡
     /// </summary>
-    /// <param name="fsm"></param>
-    public void Defend(IFsm<RoleFsm> fsm, bool isDefend = true)
+    public void Defend(bool isDefend = true)
     {
         //切换动作
         if (!animator.GetBool("isGround"))
             return;
         if (isDefend)
-            ChangeState<DefendState>(fsm);
+            // ChangeState<DefendState>(fsm);
+            HitFly(10, 20);
         else
-            ChangeState<IdleState>(fsm);
+            ChangeState<IdleState>(roleFsm);
+    }
+
+    /// <summary>
+    /// 击飞
+    /// </summary>
+    /// <param name="xSpeed">水平速度</param>
+    /// <param name="ySpeed">垂直速度</param>
+    public void HitFly(float xSpeed, float ySpeed)
+    {
+        roleFsm.SetData<VarSingle>("xSpeed", xSpeed);
+        roleFsm.SetData<VarSingle>("ySpeed", ySpeed);
+        ChangeState<HitFlyState>(roleFsm);
     }
 }

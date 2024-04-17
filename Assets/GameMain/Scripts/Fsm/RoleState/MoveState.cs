@@ -20,7 +20,7 @@ public class MoveState : RoleBaseState
     protected override void OnUpdate(IFsm<RoleFsm> fsm, float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(fsm, elapseSeconds, realElapseSeconds);
-        if (moveDir == Vector2.zero)
+        if (playerData.moveDir == Vector2.zero)
         {
             ChangeState<IdleState>(fsm);
             return;

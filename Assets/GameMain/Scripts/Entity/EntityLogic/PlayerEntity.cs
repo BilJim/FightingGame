@@ -8,6 +8,9 @@ public class PlayerEntity : RoleEntity
     protected override void OnShow(object userData)
     {
         base.OnShow(userData);
+        roleFsm.m_Fsm.SetData<VarEntityData>("playerData", GetData<PlayerData>());
+        //状态机初始状态为 IdleState
+        roleFsm.m_Fsm.Start<IdleState>();
         //订阅监听事件
         GameEntry.Event.Subscribe(InputControlEventArgs.EventId, OnNotice);
     }
@@ -30,10 +33,10 @@ public class PlayerEntity : RoleEntity
         switch (eventArgs.inputType)
         {
             case InputControlType.Horizontal:
-                moveDir.x = eventArgs.keyValue;
+                GetData<PlayerData>().moveDir.x = eventArgs.keyValue;
                 break;
             case InputControlType.Vertical:
-                moveDir.y = eventArgs.keyValue;
+                GetData<PlayerData>().moveDir.y = eventArgs.keyValue;
                 break;
         }
     }
