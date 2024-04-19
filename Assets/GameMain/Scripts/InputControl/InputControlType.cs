@@ -16,5 +16,9 @@ public enum InputControlType
     //取消防御
     UnDefend,
     //跳跃
-    Jump
+    Jump,
+    //拾取
+    PickUp,
+    //投掷
+    Throw,
 }

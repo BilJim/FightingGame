@@ -1,4 +1,3 @@
-using System;
 using GameFramework.Event;
 using GameFramework.Fsm;
 using UnityEngine;
@@ -83,6 +82,12 @@ public abstract class RoleBaseState : FsmState<RoleFsm>
             case InputControlType.UnDefend:
                 Defend(false);
                 break;
+            case InputControlType.PickUp:
+                ChangeState<PickUpState>(roleFsm);
+                break;
+            case InputControlType.Throw:
+                ChangeState<ThrowState>(roleFsm);
+                break;
         }
     }
 
@@ -165,8 +170,8 @@ public abstract class RoleBaseState : FsmState<RoleFsm>
         if (!animator.GetBool("isGround"))
             return;
         if (isDefend)
-            // ChangeState<DefendState>(fsm);
-            HitFly(10, 20);
+            ChangeState<DefendState>(roleFsm);
+            // HitFly(-2, 10);
         else
             ChangeState<IdleState>(roleFsm);
     }

@@ -31,18 +31,17 @@ public class JumpState : RoleBaseState
     protected override void OnUpdate(IFsm<RoleFsm> fsm, float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(fsm, elapseSeconds, realElapseSeconds);
+        //跳跃逻辑
+        bodyTransform.Translate(Vector2.up * nowJumpSpeed * elapseSeconds);
         //重力影响 v = v - gt;
-        if (!animator.GetBool("isGround"))
-            nowJumpSpeed -= playerData.gSpeed * elapseSeconds;
-        if (nowJumpSpeed <= 0 && bodyTransform.localPosition.y <= 0)
+        nowJumpSpeed -= playerData.gSpeed * elapseSeconds;
+        if (bodyTransform.localPosition.y <= 0)
         {
             animator.SetBool("isGround", true);
             bodyTransform.localPosition = Vector2.zero;
             ChangeState<IdleState>(fsm);
             return;
         }
-        //跳跃逻辑
-        bodyTransform.Translate(Vector2.up * nowJumpSpeed * elapseSeconds);
         Move(elapseSeconds);
     }
 

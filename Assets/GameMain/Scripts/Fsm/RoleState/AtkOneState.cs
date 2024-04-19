@@ -7,7 +7,6 @@ using UnityGameFramework.Runtime;
 /// </summary>
 public class AtkOneState : RoleBaseState
 {
-
     //一定时间内无其他操作退出当前状态
     private float exitTime;
 
