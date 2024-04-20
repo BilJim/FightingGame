@@ -21,6 +21,7 @@ public abstract class Entity : EntityLogic
         base.OnInit(userData);
         //获取动画控制器，如果有的话
         Animator = GetComponent<Animator>();
+        m_EntityData = userData as EntityData;
     }
 
     /// <summary>

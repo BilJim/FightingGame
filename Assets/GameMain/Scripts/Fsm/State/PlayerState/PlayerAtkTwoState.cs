@@ -12,7 +12,7 @@ public class PlayerAtkTwoState : PlayerBaseState
     private float exitTime;
 
     //进入有限状态机时调用
-    protected override void OnEnter(IFsm<RoleFsm> fsm)
+    protected override void OnEnter(IFsm<PlayerRoleFsm> fsm)
     {
         base.OnEnter(fsm);
         atkCount = fsm.GetData<VarInt32>("atkCount");
@@ -22,7 +22,7 @@ public class PlayerAtkTwoState : PlayerBaseState
     }
 
     //有限状态机的固定轮询调用逻辑
-    protected override void OnUpdate(IFsm<RoleFsm> fsm, float elapseSeconds, float realElapseSeconds)
+    protected override void OnUpdate(IFsm<PlayerRoleFsm> fsm, float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(fsm, elapseSeconds, realElapseSeconds);
         exitTime -= elapseSeconds;
@@ -35,7 +35,7 @@ public class PlayerAtkTwoState : PlayerBaseState
     }
 
     //离开有限状态机时调用
-    protected override void OnLeave(IFsm<RoleFsm> fsm, bool isShutdown)
+    protected override void OnLeave(IFsm<PlayerRoleFsm> fsm, bool isShutdown)
     {
         base.OnLeave(fsm, isShutdown);
         fsm.SetData<VarInt32>("atkCount", atkCount);

@@ -5,39 +5,41 @@ using UnityGameFramework.Runtime;
 /// <summary>
 /// 人物基础状态
 /// </summary>
-public abstract class MonsterBaseState : RoleBaseState
+public abstract class MonsterBaseState : RoleBaseState<MonsterRoleFsm>
 {
     //玩家人物
     protected Transform monster;
 
     //攻击次数
     protected int atkCount;
-    protected PlayerData playerData;
+    protected MonsterData monsterData;
 
     //创建有限状态机时调用
-    protected override void OnInit(IFsm<RoleFsm> fsm)
+    protected override void OnInit(IFsm<MonsterRoleFsm> fsm)
     {
         base.OnInit(fsm);
         roleFsm = fsm;
     }
 
     //进入有限状态机时调用
-    protected override void OnEnter(IFsm<RoleFsm> fsm)
+    protected override void OnEnter(IFsm<MonsterRoleFsm> fsm)
     {
         base.OnEnter(fsm);
         monster = (Transform)fsm.GetData<VarUnityObject>("monster").Value;
-        playerData = fsm.GetData<VarEntityData>("monsterData").Value as PlayerData;
+        monsterData = fsm.GetData<VarEntityData>("monsterData").Value as MonsterData;
     }
 
-    protected void Move(float elapseSeconds, Vector2 moveDir)
+    public void Idle()
     {
-        //移动
-        monster.Translate(playerData.moveDir.normalized * playerData.moveSpeed * elapseSeconds);
-        //转向
-        if (playerData.moveDir.x > 0)
-            roleSprite.flipX = false;
-        else if (playerData.moveDir.x < 0)
-            roleSprite.flipX = true;
+        if (roleFsm.CurrentState.GetType() != typeof(MonsterIdleState))
+            ChangeState<MonsterIdleState>(roleFsm);
+    }
+
+    public void Move(float elapseSeconds, Vector2 movePos)
+    {
+        if (roleFsm.CurrentState.GetType() != typeof(MonsterMoveState))
+            ChangeState<MonsterMoveState>(roleFsm);
+        monsterData.movePos = movePos;
     }
 
     /// <summary>
@@ -46,8 +48,8 @@ public abstract class MonsterBaseState : RoleBaseState
     public override void Jump()
     {
         //切换动作
-        if (animator.GetBool("isGround"))
-            ChangeState<PlayerJumpState>(roleFsm);
+        // if (animator.GetBool("isGround"))
+            // ChangeState<MonsterJumpState>(roleFsm);
     }
 
     /// <summary>
@@ -56,15 +58,15 @@ public abstract class MonsterBaseState : RoleBaseState
     public override void Attack()
     {
         //切换动作
-        if (!animator.GetBool("isGround"))
-            return;
-        roleFsm.SetData<VarInt32>("atkCount", atkCount);
-        ChangeState<PlayerAtkOneState>(roleFsm);
+        // if (!animator.GetBool("isGround"))
+        //     return;
+        // roleFsm.SetData<VarInt32>("atkCount", atkCount);
+        // ChangeState<PlayerAtkOneState>(roleFsm);
     }
 
     public override void Hit()
     {
-        ChangeState<PlayerHitState>(roleFsm);
+        // ChangeState<PlayerHitState>(roleFsm);
     }
 
     /// <summary>
@@ -74,8 +76,8 @@ public abstract class MonsterBaseState : RoleBaseState
     /// <param name="ySpeed">垂直速度</param>
     public override void HitFly(float xSpeed, float ySpeed)
     {
-        roleFsm.SetData<VarSingle>("xSpeed", xSpeed);
-        roleFsm.SetData<VarSingle>("ySpeed", ySpeed);
-        ChangeState<PlayerHitFlyState>(roleFsm);
+        // roleFsm.SetData<VarSingle>("xSpeed", xSpeed);
+        // roleFsm.SetData<VarSingle>("ySpeed", ySpeed);
+        // ChangeState<PlayerHitFlyState>(roleFsm);
     }
 }

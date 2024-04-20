@@ -13,10 +13,13 @@ public class MonsterData : TargetableObjectData
     
     //移动速度
     public float moveSpeed = 3;
-    //移动方向
-    public Vector2 moveDir = Vector2.zero;
     //跳跃速度
     public float jumpSpeed = 10;
     //重力加速度
     public float gSpeed = 50f;
+
+    //出生点
+    public Vector2 bornPos;
+    //移动方向
+    public Vector2 movePos;
 }

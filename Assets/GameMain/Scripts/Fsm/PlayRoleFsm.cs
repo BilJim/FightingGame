@@ -2,33 +2,32 @@ using GameFramework.Fsm;
 using UnityGameFramework.Runtime;
 
 /// <summary>
-/// 角色状态机
+/// 玩家角色状态机
 /// 初始化时
 /// </summary>
-public class RoleFsm
+public class PlayerRoleFsm
 {
-
-    public IFsm<RoleFsm> m_Fsm = null;
+    public IFsm<PlayerRoleFsm> m_Fsm = null;
 
     //角色状态机列表
-    public FsmState<RoleFsm>[] roleStates =
+    public FsmState<PlayerRoleFsm>[] roleStates =
     {
-        new PlayerIdleState(), new PlayerMoveState(), 
+        new PlayerIdleState(), new PlayerMoveState(),
         new PlayerJumpState(), new PlayerJumpAtkState(),
         new PlayerAtkOneState(), new PlayerAtkTwoState(), new PlayerAtkThreeState(),
         new PlayerFootAtkOneState(), new PlayerFootAtkTwoState(),
         new PlayerHitState(), new PlayerHitFlyState(),
         new PlayerThrowState(), new PlayerPickUpState(), new PlayerDefendState()
     };
-    
+
 
     /// <summary>
     /// 启动一个状态机
     /// </summary>
-    public RoleFsm()
+    public PlayerRoleFsm()
     {
         FsmComponent fsmComponent = GameEntry.Fsm;
-        
+
         //创建有限状态机
         //状态机持有者: 当前实例
         //有哪些状态: roleStates[...]
@@ -44,4 +43,3 @@ public class RoleFsm
         fsmComponent.DestroyFsm(m_Fsm);
     }
 }
-

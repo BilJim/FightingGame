@@ -17,5 +17,6 @@
 
         //玩家实体资源
         public const int PlayerAsset = 90;
+        public const int MonsterAsset = 91;
     }
 }

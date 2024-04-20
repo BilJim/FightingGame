@@ -6,7 +6,7 @@ using UnityGameFramework.Runtime;
 /// <summary>
 /// 人物基础状态
 /// </summary>
-public abstract class PlayerBaseState : RoleBaseState
+public abstract class PlayerBaseState : RoleBaseState<PlayerRoleFsm>
 {
     //玩家人物
     protected Transform player;
@@ -15,14 +15,14 @@ public abstract class PlayerBaseState : RoleBaseState
     protected PlayerData playerData;
     
     //创建有限状态机时调用
-    protected override void OnInit(IFsm<RoleFsm> fsm)
+    protected override void OnInit(IFsm<PlayerRoleFsm> fsm)
     {
         base.OnInit(fsm);
         roleFsm = fsm;
     }
 
     //进入有限状态机时调用
-    protected override void OnEnter(IFsm<RoleFsm> fsm)
+    protected override void OnEnter(IFsm<PlayerRoleFsm> fsm)
     {
         base.OnEnter(fsm);
         player = (Transform)fsm.GetData<VarUnityObject>("player").Value;
@@ -96,7 +96,7 @@ public abstract class PlayerBaseState : RoleBaseState
         //切换动作
         if (!animator.GetBool("isGround"))
             return;
-        FsmState<RoleFsm> currentState = roleFsm.CurrentState;
+        FsmState<PlayerRoleFsm> currentState = roleFsm.CurrentState;
         atkCount ++;
         if (currentState.GetType() == typeof(PlayerAtkOneState))
         {
@@ -123,7 +123,7 @@ public abstract class PlayerBaseState : RoleBaseState
         //切换动作
         if (!animator.GetBool("isGround"))
             return;
-        FsmState<RoleFsm> currentState = roleFsm.CurrentState;
+        FsmState<PlayerRoleFsm> currentState = roleFsm.CurrentState;
         atkCount ++;
         if (currentState.GetType() == typeof(PlayerFootAtkOneState))
         {

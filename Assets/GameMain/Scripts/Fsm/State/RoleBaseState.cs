@@ -1,4 +1,3 @@
-using GameFramework.Event;
 using GameFramework.Fsm;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -6,22 +5,21 @@ using UnityGameFramework.Runtime;
 /// <summary>
 /// 人物基础状态
 /// </summary>
-public abstract class RoleBaseState : FsmState<RoleFsm>
+public abstract class RoleBaseState<T> : FsmState<T> where T : class
 {
     protected Animator animator;
     //用于调整人物方向
     protected SpriteRenderer roleSprite;
-    protected IFsm<RoleFsm> roleFsm;
+    protected IFsm<T> roleFsm;
     
     //创建有限状态机时调用
-    protected override void OnInit(IFsm<RoleFsm> fsm)
+    protected override void OnInit(IFsm<T> fsm)
     {
         base.OnInit(fsm);
-        roleFsm = fsm;
     }
 
     //进入有限状态机时调用
-    protected override void OnEnter(IFsm<RoleFsm> fsm)
+    protected override void OnEnter(IFsm<T> fsm)
     {
         base.OnEnter(fsm);
         animator = (Animator)fsm.GetData<VarUnityObject>("animator").Value;
@@ -29,19 +27,19 @@ public abstract class RoleBaseState : FsmState<RoleFsm>
     }
 
     //有限状态机的固定轮询调用逻辑
-    protected override void OnUpdate(IFsm<RoleFsm> fsm, float elapseSeconds, float realElapseSeconds)
+    protected override void OnUpdate(IFsm<T> fsm, float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(fsm, elapseSeconds, realElapseSeconds);
     }
 
     //离开有限状态机时调用
-    protected override void OnLeave(IFsm<RoleFsm> fsm, bool isShutdown)
+    protected override void OnLeave(IFsm<T> fsm, bool isShutdown)
     {
         base.OnLeave(fsm, isShutdown);
     }
 
     //销毁有限状态机时调用
-    protected override void OnDestroy(IFsm<RoleFsm> fsm)
+    protected override void OnDestroy(IFsm<T> fsm)
     {
         base.OnDestroy(fsm);
     }

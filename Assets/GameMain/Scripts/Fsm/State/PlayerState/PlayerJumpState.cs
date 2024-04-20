@@ -14,7 +14,7 @@ public class PlayerJumpState : PlayerBaseState
     private Transform bodyTransform;
 
     //进入有限状态机时调用
-    protected override void OnEnter(IFsm<RoleFsm> fsm)
+    protected override void OnEnter(IFsm<PlayerRoleFsm> fsm)
     {
         base.OnEnter(fsm);
         bodyTransform = player.Find("Role");
@@ -28,7 +28,7 @@ public class PlayerJumpState : PlayerBaseState
     }
 
     //有限状态机的固定轮询调用逻辑
-    protected override void OnUpdate(IFsm<RoleFsm> fsm, float elapseSeconds, float realElapseSeconds)
+    protected override void OnUpdate(IFsm<PlayerRoleFsm> fsm, float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(fsm, elapseSeconds, realElapseSeconds);
         //跳跃逻辑
@@ -45,7 +45,7 @@ public class PlayerJumpState : PlayerBaseState
         Move(elapseSeconds);
     }
 
-    protected override void OnLeave(IFsm<RoleFsm> fsm, bool isShutdown)
+    protected override void OnLeave(IFsm<PlayerRoleFsm> fsm, bool isShutdown)
     {
         base.OnLeave(fsm, isShutdown);
         GameEntry.Event.Unsubscribe(InputControlEventArgs.EventId, OnNotice);

@@ -7,10 +7,14 @@ using UnityEngine;
 public class MonsterIdleState : MonsterBaseState
 {
     //有限状态机的固定轮询调用逻辑
-    protected override void OnUpdate(IFsm<RoleFsm> fsm, float elapseSeconds, float realElapseSeconds)
+    protected override void OnUpdate(IFsm<MonsterRoleFsm> fsm, float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(fsm, elapseSeconds, realElapseSeconds);
-        if (playerData.moveDir != Vector2.zero)
-            ChangeState<MonsterMoveState>(fsm);
+    }
+
+    protected override void OnEnter(IFsm<MonsterRoleFsm> fsm)
+    {
+        base.OnEnter(fsm);
+        
     }
 }
