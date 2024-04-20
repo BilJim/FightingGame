@@ -6,14 +6,10 @@ using UnityGameFramework.Runtime;
 /// <summary>
 /// 人物基础状态
 /// </summary>
-public abstract class RoleBaseState : FsmState<RoleFsm>
+public abstract class PlayerBaseState : RoleBaseState
 {
     //玩家人物
     protected Transform player;
-    protected Animator animator;
-    //用于调整人物方向
-    private SpriteRenderer roleSprite;
-    protected IFsm<RoleFsm> roleFsm;
     //攻击次数
     protected int atkCount;
     protected PlayerData playerData;
@@ -30,31 +26,11 @@ public abstract class RoleBaseState : FsmState<RoleFsm>
     {
         base.OnEnter(fsm);
         player = (Transform)fsm.GetData<VarUnityObject>("player").Value;
-        animator = (Animator)fsm.GetData<VarUnityObject>("animator").Value;
-        roleSprite = (SpriteRenderer)fsm.GetData<VarUnityObject>("roleSprite").Value;
         playerData = fsm.GetData<VarEntityData>("playerData").Value as PlayerData;
         if (fsm.GetData<VarInt32>("atkCount") == null)
             atkCount = 0;
         else
             atkCount = fsm.GetData<VarInt32>("atkCount").Value;
-    }
-
-    //有限状态机的固定轮询调用逻辑
-    protected override void OnUpdate(IFsm<RoleFsm> fsm, float elapseSeconds, float realElapseSeconds)
-    {
-        base.OnUpdate(fsm, elapseSeconds, realElapseSeconds);
-    }
-
-    //离开有限状态机时调用
-    protected override void OnLeave(IFsm<RoleFsm> fsm, bool isShutdown)
-    {
-        base.OnLeave(fsm, isShutdown);
-    }
-
-    //销毁有限状态机时调用
-    protected override void OnDestroy(IFsm<RoleFsm> fsm)
-    {
-        base.OnDestroy(fsm);
     }
     
     /// <summary>
@@ -83,10 +59,10 @@ public abstract class RoleBaseState : FsmState<RoleFsm>
                 Defend(false);
                 break;
             case InputControlType.PickUp:
-                ChangeState<PickUpState>(roleFsm);
+                ChangeState<PlayerPickUpState>(roleFsm);
                 break;
             case InputControlType.Throw:
-                ChangeState<ThrowState>(roleFsm);
+                ChangeState<PlayerThrowState>(roleFsm);
                 break;
         }
     }
@@ -105,37 +81,37 @@ public abstract class RoleBaseState : FsmState<RoleFsm>
     /// <summary>
     /// 跳跃
     /// </summary>
-    public void Jump()
+    public override void Jump()
     {
         //切换动作
         if (animator.GetBool("isGround"))
-            ChangeState<JumpState>(roleFsm);
+            ChangeState<PlayerJumpState>(roleFsm);
     }
 
     /// <summary>
     /// 手部攻击
     /// </summary>
-    public void Attack()
+    public override void Attack()
     {
         //切换动作
         if (!animator.GetBool("isGround"))
             return;
         FsmState<RoleFsm> currentState = roleFsm.CurrentState;
         atkCount ++;
-        if (currentState.GetType() == typeof(AtkOneState))
+        if (currentState.GetType() == typeof(PlayerAtkOneState))
         {
             roleFsm.SetData<VarInt32>("atkCount", atkCount);
-            ChangeState<AtkTwoState>(roleFsm);
+            ChangeState<PlayerAtkTwoState>(roleFsm);
         }
-        else if (currentState.GetType() == typeof(AtkTwoState))
+        else if (currentState.GetType() == typeof(PlayerAtkTwoState))
         {
             roleFsm.SetData<VarInt32>("atkCount", atkCount);
-            ChangeState<AtkThreeState>(roleFsm);
+            ChangeState<PlayerAtkThreeState>(roleFsm);
         }
         else
         {
             roleFsm.SetData<VarInt32>("atkCount", atkCount);
-            ChangeState<AtkOneState>(roleFsm);
+            ChangeState<PlayerAtkOneState>(roleFsm);
         }
     }
     
@@ -149,15 +125,15 @@ public abstract class RoleBaseState : FsmState<RoleFsm>
             return;
         FsmState<RoleFsm> currentState = roleFsm.CurrentState;
         atkCount ++;
-        if (currentState.GetType() == typeof(FootAtkOneState))
+        if (currentState.GetType() == typeof(PlayerFootAtkOneState))
         {
             roleFsm.SetData<VarInt32>("atkCount", atkCount);
-            ChangeState<FootAtkTwoState>(roleFsm);
+            ChangeState<PlayerFootAtkTwoState>(roleFsm);
         }
         else
         {
             roleFsm.SetData<VarInt32>("atkCount", atkCount);
-            ChangeState<FootAtkOneState>(roleFsm);
+            ChangeState<PlayerFootAtkOneState>(roleFsm);
         }
     }
 
@@ -170,10 +146,14 @@ public abstract class RoleBaseState : FsmState<RoleFsm>
         if (!animator.GetBool("isGround"))
             return;
         if (isDefend)
-            ChangeState<DefendState>(roleFsm);
-            // HitFly(-2, 10);
+            ChangeState<PlayerDefendState>(roleFsm);
         else
-            ChangeState<IdleState>(roleFsm);
+            ChangeState<PlayerIdleState>(roleFsm);
+    }
+
+    public override void Hit()
+    {
+        ChangeState<PlayerHitState>(roleFsm);
     }
 
     /// <summary>
@@ -181,10 +161,10 @@ public abstract class RoleBaseState : FsmState<RoleFsm>
     /// </summary>
     /// <param name="xSpeed">水平速度</param>
     /// <param name="ySpeed">垂直速度</param>
-    public void HitFly(float xSpeed, float ySpeed)
+    public override void HitFly(float xSpeed, float ySpeed)
     {
         roleFsm.SetData<VarSingle>("xSpeed", xSpeed);
         roleFsm.SetData<VarSingle>("ySpeed", ySpeed);
-        ChangeState<HitFlyState>(roleFsm);
+        ChangeState<PlayerHitFlyState>(roleFsm);
     }
 }

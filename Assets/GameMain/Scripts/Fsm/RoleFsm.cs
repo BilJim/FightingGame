@@ -13,12 +13,12 @@ public class RoleFsm
     //角色状态机列表
     public FsmState<RoleFsm>[] roleStates =
     {
-        new IdleState(), new MoveState(), 
-        new JumpState(), new JumpAtkState(),
-        new AtkOneState(), new AtkTwoState(), new AtkThreeState(),
-        new FootAtkOneState(), new FootAtkTwoState(),
-        new HitState(), new HitFlyState(),
-        new ThrowState(), new PickUpState(), new DefendState()
+        new PlayerIdleState(), new PlayerMoveState(), 
+        new PlayerJumpState(), new PlayerJumpAtkState(),
+        new PlayerAtkOneState(), new PlayerAtkTwoState(), new PlayerAtkThreeState(),
+        new PlayerFootAtkOneState(), new PlayerFootAtkTwoState(),
+        new PlayerHitState(), new PlayerHitFlyState(),
+        new PlayerThrowState(), new PlayerPickUpState(), new PlayerDefendState()
     };
     
 

@@ -23,7 +23,6 @@ public abstract class RoleEntity : TargetableObject
         //创建角色状态机
         roleFsm = new RoleFsm();
         roleFsm.m_Fsm.SetData<VarUnityObject>("roleSprite", roleSprite);
-        roleFsm.m_Fsm.SetData<VarUnityObject>("player", transform);
         roleFsm.m_Fsm.SetData<VarUnityObject>("animator", Animator);
     }
 

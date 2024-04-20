@@ -6,7 +6,7 @@ using UnityGameFramework.Runtime;
 /// <summary>
 /// Jump 状态
 /// </summary>
-public class JumpState : RoleBaseState
+public class PlayerJumpState : PlayerBaseState
 {
 
     protected float nowJumpSpeed;
@@ -18,7 +18,7 @@ public class JumpState : RoleBaseState
     {
         base.OnEnter(fsm);
         bodyTransform = player.Find("Role");
-        if (fsm.CurrentState.GetType() == typeof(JumpAtkState))
+        if (fsm.CurrentState.GetType() == typeof(PlayerJumpAtkState))
             return;
         animator.SetBool("isGround", false);
         animator.SetTrigger("jumpTrigger");
@@ -39,7 +39,7 @@ public class JumpState : RoleBaseState
         {
             animator.SetBool("isGround", true);
             bodyTransform.localPosition = Vector2.zero;
-            ChangeState<IdleState>(fsm);
+            ChangeState<PlayerIdleState>(fsm);
             return;
         }
         Move(elapseSeconds);
@@ -64,7 +64,7 @@ public class JumpState : RoleBaseState
             case InputControlType.Atk1:
             case InputControlType.Atk2:
                 roleFsm.SetData<VarSingle>("nowJumpSpeed", nowJumpSpeed);
-                ChangeState<JumpAtkState>(roleFsm);
+                ChangeState<PlayerJumpAtkState>(roleFsm);
                 break;
         }
     }

@@ -3,26 +3,20 @@ using UnityEngine;
 using UnityGameFramework.Runtime;
 
 /// <summary>
-/// Hit 状态
+/// FootAtk 状态
 /// </summary>
-public class HitState : RoleBaseState
+public class PlayerFootAtkTwoState : PlayerBaseState
 {
 
-    //一定时间内结束受伤状态
+    //一定时间内无其他操作退出当前状态
     private float exitTime;
-    
+
     //进入有限状态机时调用
     protected override void OnEnter(IFsm<RoleFsm> fsm)
     {
         base.OnEnter(fsm);
-        animator.SetBool("isHit", true);
-        if (fsm.GetData<VarSingle>("hitTime") == null)
-            exitTime = 0.3f;
-        else
-        {
-            exitTime = fsm.GetData<VarSingle>("hitTime");
-            fsm.RemoveData("hitTime");
-        }
+        animator.SetInteger("atkCount", atkCount);
+        exitTime = 0.3f;
     }
 
     //有限状态机的固定轮询调用逻辑
@@ -31,13 +25,15 @@ public class HitState : RoleBaseState
         base.OnUpdate(fsm, elapseSeconds, realElapseSeconds);
         exitTime -= elapseSeconds;
         if (exitTime <= 0)
-            ChangeState<IdleState>(fsm);
+            ChangeState<PlayerIdleState>(fsm);
     }
 
     //离开有限状态机时调用
     protected override void OnLeave(IFsm<RoleFsm> fsm, bool isShutdown)
     {
+        atkCount = 0;
+        animator.SetInteger("atkCount", atkCount);
+        fsm.RemoveData("atkCount");
         base.OnLeave(fsm, isShutdown);
-        animator.SetBool("isHit", false);
     }
 }

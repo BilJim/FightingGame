@@ -5,7 +5,7 @@ using UnityGameFramework.Runtime;
 /// <summary>
 /// HitFly 状态
 /// </summary>
-public class HitFlyState : RoleBaseState
+public class PlayerHitFlyState : PlayerBaseState
 {
 
     private float xSpeed;
@@ -44,7 +44,7 @@ public class HitFlyState : RoleBaseState
             floorTime -= elapseSeconds;
             if (floorTime <= 0)
             {
-                ChangeState<IdleState>(fsm);
+                ChangeState<PlayerIdleState>(fsm);
                 return;
             }
         }

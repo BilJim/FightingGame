@@ -4,7 +4,7 @@ using UnityGameFramework.Runtime;
 /// <summary>
 /// FootAtkOne 状态
 /// </summary>
-public class FootAtkOneState : RoleBaseState
+public class PlayerFootAtkOneState : PlayerBaseState
 {
 
     //一定时间内无其他操作退出当前状态
@@ -30,7 +30,7 @@ public class FootAtkOneState : RoleBaseState
         {
             atkCount = 0;
             fsm.RemoveData("atkCount");
-            ChangeState<IdleState>(fsm);
+            ChangeState<PlayerIdleState>(fsm);
         }
     }
 

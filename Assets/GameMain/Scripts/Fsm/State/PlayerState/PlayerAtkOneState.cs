@@ -1,18 +1,23 @@
 using GameFramework.Fsm;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 
 /// <summary>
-/// Move 状态
+/// AtkOne 状态
 /// </summary>
-public class MoveState : RoleBaseState
+public class PlayerAtkOneState : PlayerBaseState
 {
+    //一定时间内无其他操作退出当前状态
+    private float exitTime;
 
     //进入有限状态机时调用
     protected override void OnEnter(IFsm<RoleFsm> fsm)
     {
         base.OnEnter(fsm);
-        animator.SetBool("isMoving", true);
-        //订阅监听事件
+        animator.SetTrigger("atkTrigger");
+        atkCount = fsm.GetData<VarInt32>("atkCount");
+        animator.SetInteger("atkCount", atkCount);
+        exitTime = 0.3f;
         GameEntry.Event.Subscribe(InputControlEventArgs.EventId, OnNotice);
     }
 
@@ -20,18 +25,21 @@ public class MoveState : RoleBaseState
     protected override void OnUpdate(IFsm<RoleFsm> fsm, float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(fsm, elapseSeconds, realElapseSeconds);
-        if (playerData.moveDir == Vector2.zero)
+        exitTime -= elapseSeconds;
+        if (exitTime <= 0)
         {
-            ChangeState<IdleState>(fsm);
-            return;
+            atkCount = 0;
+            fsm.RemoveData("atkCount");
+            ChangeState<PlayerIdleState>(fsm);
         }
-        Move(elapseSeconds);
     }
 
+    //离开有限状态机时调用
     protected override void OnLeave(IFsm<RoleFsm> fsm, bool isShutdown)
     {
         base.OnLeave(fsm, isShutdown);
-        animator.SetBool("isMoving", false);
+        fsm.SetData<VarInt32>("atkCount", atkCount);
+        animator.SetInteger("atkCount", atkCount);
         GameEntry.Event.Unsubscribe(InputControlEventArgs.EventId, OnNotice);
     }
 }
