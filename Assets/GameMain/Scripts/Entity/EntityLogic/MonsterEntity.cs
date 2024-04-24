@@ -1,3 +1,4 @@
+using FightingGame;
 using UnityGameFramework.Runtime;
 
 /// <summary>
@@ -5,30 +6,27 @@ using UnityGameFramework.Runtime;
 /// </summary>
 public class MonsterEntity : RoleEntity
 {
-    public MonsterRoleFsm roleFsm;
+    //AI行为状态机
     public AIFsm aiFsm;
+
+    public DATAMonster monsterData;
 
     protected override void OnInit(object userData)
     {
         base.OnInit(userData);
-        //创建角色状态机
-        roleFsm = new MonsterRoleFsm();
-        roleFsm.m_Fsm.SetData<VarUnityObject>("monster", transform);
-        roleFsm.m_Fsm.SetData<VarEntityData>("monsterData", userData as MonsterData);
-        roleFsm.m_Fsm.SetData<VarUnityObject>("roleSprite", roleSprite);
-        roleFsm.m_Fsm.SetData<VarUnityObject>("animator", Animator);
-        //状态机初始状态为 IdleState
-        roleFsm.m_Fsm.Start<MonsterIdleState>();
-        
+        monsterData = (userData as MonsterData).Data;
+
         aiFsm = new AIFsm();
         aiFsm.m_Fsm.SetData<VarUnityObject>("monster", this);
+        aiFsm.m_Fsm.SetData<VarDataRowBase>("monsterData", monsterData);
+        aiFsm.m_Fsm.SetData<VarUnityObject>("roleSprite", roleSprite);
+        aiFsm.m_Fsm.SetData<VarUnityObject>("animator", Animator);
         aiFsm.m_Fsm.Start<AIPatrolState>();
     }
 
     protected override void OnDead(Entity attacker)
     {
         base.OnDead(attacker);
-        roleFsm.DestroyFsm();
         aiFsm.DestroyFsm();
     }
 }

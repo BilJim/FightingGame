@@ -1,5 +1,6 @@
 using System;
-using UnityEngine;
+using FightingGame;
+using GameFramework.DataTable;
 
 [Serializable]
 public class MonsterData : TargetableObjectData
@@ -7,19 +8,13 @@ public class MonsterData : TargetableObjectData
     public MonsterData(int entityId, int typeId, CampType camp) : base(entityId, typeId, camp)
     {
         HP = 100;
+
+
+        IDataTable<DATAMonster> dtMonster = GameEntry.DataTable.GetDataTable<DATAMonster>();
+        Data = dtMonster.GetDataRow(typeId);
     }
 
-    public override int MaxHP { get; }
-    
-    //移动速度
-    public float moveSpeed = 3;
-    //跳跃速度
-    public float jumpSpeed = 10;
-    //重力加速度
-    public float gSpeed = 50f;
+    public override int MaxHP => Data.MaxHP;
 
-    //出生点
-    public Vector2 bornPos;
-    //移动方向
-    public Vector2 movePos;
+    public DATAMonster Data { get; private set; }
 }

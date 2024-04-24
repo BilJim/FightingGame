@@ -51,6 +51,11 @@ public partial class GameEntry : MonoBehaviour
     /// </summary>
     public static SceneComponent Scene { get; private set; }
 
+    /// <summary>
+    /// 获取数据表组件。
+    /// </summary>
+    public static DataTableComponent DataTable { get; private set; }
+
     private static void InitBuiltinComponents()
     {
         Base = UnityGameFramework.Runtime.GameEntry.GetComponent<BaseComponent>();
@@ -62,5 +67,6 @@ public partial class GameEntry : MonoBehaviour
         ObjectPool = UnityGameFramework.Runtime.GameEntry.GetComponent<ObjectPoolComponent>();
         Procedure = UnityGameFramework.Runtime.GameEntry.GetComponent<ProcedureComponent>();
         Scene = UnityGameFramework.Runtime.GameEntry.GetComponent<SceneComponent>();
+        DataTable = UnityGameFramework.Runtime.GameEntry.GetComponent<DataTableComponent>();
     }
 }

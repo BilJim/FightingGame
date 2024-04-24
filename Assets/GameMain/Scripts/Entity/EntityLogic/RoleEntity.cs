@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public abstract class RoleEntity : TargetableObject
 {
-    protected SpriteRenderer roleSprite;
+    public SpriteRenderer roleSprite;
 
     protected override void OnInit(object userData)
     {
@@ -28,5 +28,13 @@ public abstract class RoleEntity : TargetableObject
     protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(elapseSeconds, realElapseSeconds);
+    }
+
+    /// <summary>
+    /// 判断朝向是否是右边
+    /// </summary>
+    public bool BodyIsRight()
+    {
+        return !roleSprite.flipX;
     }
 }

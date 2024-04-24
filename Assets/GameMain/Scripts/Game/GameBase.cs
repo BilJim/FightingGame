@@ -16,7 +16,7 @@ public abstract class GameBase
         GameEntry.Event.Subscribe(ShowEntityFailureEventArgs.EventId, OnShowEntityFailure);
 
         PlayerData playerData = new PlayerData(0, 0, CampType.Player);
-        MonsterData monsterData = new MonsterData(0, 0, CampType.Enemy);
+        MonsterData monsterData = new MonsterData(0, 1, CampType.Enemy);
         GameEntry.Entity.ShowEntity<PlayerEntity>(1000, AssetUtility.GetEntityAsset("Player"), "Player", Constant.AssetPriority.PlayerAsset, playerData);
         GameEntry.Entity.ShowEntity<MonsterEntity>(1001, AssetUtility.GetEntityAsset("Monster"), "Enemy", Constant.AssetPriority.MonsterAsset, monsterData);
         GameOver = false;

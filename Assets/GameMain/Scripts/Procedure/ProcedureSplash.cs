@@ -19,10 +19,7 @@ public class ProcedureSplash : ProcedureBase
         {
             // 编辑器模式 直接加载项目内资源
             Log.Info("Editor resource mode detected.");
-            // ChangeState<ProcedurePreload>(procedureOwner);
-            //暂时先直接加载游戏场景
-            procedureOwner.SetData<VarString>("NextSceneName", "Game");
-            ChangeState<ProcedureChangeScene>(procedureOwner);
+            ChangeState<ProcedurePreload>(procedureOwner);
         }
         // else if (GameEntry.Resource.ResourceMode == ResourceMode.Package)
         // {

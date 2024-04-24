@@ -12,7 +12,7 @@ public class PlayerData : TargetableObjectData
     public override int MaxHP { get; }
     
     //移动速度
-    public float moveSpeed = 3;
+    public float moveSpeed = 8;
     //移动方向
     public Vector2 moveDir = Vector2.zero;
     //跳跃速度
